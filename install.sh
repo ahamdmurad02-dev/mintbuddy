@@ -14,7 +14,7 @@ chmod +x "$DEST/mintbuddy.py"
 
 cat > "${BIN_DIR}/mintbuddy" <<EOF
 #!/usr/bin/env bash
-exec python3 "${DEST}/mintbuddy.py" "$@"
+exec python3 "${DEST}/mintbuddy.py" "\$@"
 EOF
 chmod +x "${BIN_DIR}/mintbuddy"
 
@@ -32,7 +32,6 @@ Keywords=mint;study;notes;linux;
 EOF
 chmod +x "${APP_DIR}/mintbuddy.desktop"
 
-# Refresh menu cache if the helper exists
 if command -v update-desktop-database >/dev/null 2>&1; then
   update-desktop-database "$APP_DIR" >/dev/null 2>&1 || true
 fi

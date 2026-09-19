@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MintBuddy — Linux Mint Helper</title>
+  <style>
+    :root {
+      --mint: #87CF3E;
+      --mint-dark: #2E7D32;
+      --leaf: #35A154;
+      --bg: #f3f6f1;
+      --card: #ffffff;
+      --ink: #1d2a22;
+      --muted: #5b6b61;
+      --line: #d7e3d4;
+      --shadow: 0 10px 30px rgba(46, 125, 50, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: "Ubuntu", "Noto Sans", "Cantarell", system-ui, sans-serif;
+      background:
+        radial-gradient(900px 400px at 10% -10%, rgba(135,207,62,.25), transparent 50%),
+        radial-gradient(700px 300px at 100% 0%, rgba(53,161,84,.12), transparent 45%),
+        var(--bg);
+      color: var(--ink);
+    }
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo { width: 48px; height: 48px; }
+    h1 { margin: 0; font-size: 1.55rem; letter-spacing: -0.02em; }
+    .subtitle { margin: 2px 0 0; color: var(--muted); font-size: 0.95rem; }
+    .greeting {
+      background: linear-gradient(135deg, var(--leaf), var(--mint));
+      color: white;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+    }
+    nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    nav button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      padding: 9px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    nav button.active {
+      background: var(--leaf);
+      color: white;
+      border-color: var(--leaf);
+    }
+    .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    h2 { margin: 0 0 12px; font-size: 1.15rem; }
+    .hidden { display: none !important; }
+    .timer { text-align: center; padding: 10px 0 6px; }
+    .clock {
+      font-size: 4.2rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--mint-dark);
+    }
+    .timer-actions, .row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    button.primary, .btn {
+      background: var(--leaf);
+      color: white;
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.ghost {
+      background: #eef6ea;
+      color: var(--mint-dark);
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+    }
+    textarea { min-height: 180px; resize: vertical; }
+    ul.tips, ul.cmds { margin: 0; padding: 0; list-style: none; }
+    ul.tips li, ul.cmds li {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      background: #fbfef9;
+    }
+    code {
+      background: #e8f5e4;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: "Ubuntu Mono", ui-monospace, monospace;
+    }
+    .sys dt { color: var(--muted); font-size: 0.85rem; }
+    .sys dd { margin: 0 0 10px; font-weight: 700; }
+    .panel { display: grid; gap: 16px; }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+      .clock { font-size: 3.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 128 128" aria-hidden="true">
+          <rect width="128" height="128" rx="28" fill="#35A154"/>
+          <circle cx="64" cy="58" r="28" fill="#fff"/>
+          <path d="M64 36c-12 10-18 18-18 28a18 18 0 0036 0c0-10-6-18-18-28z" fill="#35A154"/>
+        </svg>
+        <div>
+          <h1>MintBuddy</h1>
+          <p class="subtitle">A friendly helper for Linux Mint students</p>
+        </div>
+      </div>
+      <div class="greeting" id="hello">Hello</div>
+    </header>
+
+    <nav>
+      <button class="active" data-tab="home">Home</button>
+      <button data-tab="study">Study Timer</button>
+      <button data-tab="notes">Notes</button>
+      <button data-tab="learn">Learn Linux</button>
+      <button data-tab="system">This PC</button>
+    </nav>
+
+    <section id="home" class="grid">
+      <div class="card">
+        <h2>Today on Mint</h2>
+        <p>Linux Mint is a calm, reliable desktop. This app helps you study, take notes, and learn useful commands without leaving a simple window.</p>
+        <ul class="tips" id="dailyTips"></ul>
+      </div>
+      <div class="card">
+        <h2>Quick start</h2>
+        <ul class="tips">
+          <li>Open the Menu (bottom-left) to find apps.</li>
+          <li>Use <code>Ctrl + Alt + T</code> to open Terminal.</li>
+          <li>Software Manager is the safe way to install programs.</li>
+          <li>Keep Update Manager running so the system stays healthy.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="study" class="hidden panel">
+      <div class="card timer">
+        <h2>Focus session</h2>
+        <div class="clock" id="clock">25:00</div>
+        <p id="timerLabel">25-minute study block</p>
+        <div class="timer-actions">
+          <button class="primary" id="startBtn">Start</button>
+          <button class="ghost" id="pauseBtn">Pause</button>
+          <button class="ghost" id="resetBtn">Reset</button>
+        </div>
+        <div class="timer-actions" style="margin-top:10px">
+          <button class="ghost" data-mins="25">25 min</button>
+          <button class="ghost" data-mins="15">15 min</button>
+          <button class="ghost" data-mins="5">5 min break</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="notes" class="hidden panel">
+      <div class="card">
+        <h2>Quick notes</h2>
+        <p class="subtitle">Saved on this computer only (in your browser storage).</p>
+        <textarea id="notesBox" placeholder="Write homework reminders, ideas, or class notes..."></textarea>
+        <div class="row" style="margin-top:10px; justify-content:flex-start">
+          <button class="primary" id="saveNotes">Save</button>
+          <button class="ghost" id="clearNotes">Clear</button>
+          <span id="saveState" class="subtitle"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="learn" class="hidden panel">
+      <div class="card">
+        <h2>Beginner command sheet</h2>
+        <ul class="cmds">
+          <li><code>pwd</code> — show the folder you are in</li>
+          <li><code>ls</code> — list files in this folder</li>
+          <li><code>cd Documents</code> — move into the Documents folder</li>
+          <li><code>cd ..</code> — go up one folder</li>
+          <li><code>mkdir project</code> — create a new folder named project</li>
+          <li><code>cp file.txt backup.txt</code> — copy a file</li>
+          <li><code>mv old.txt new.txt</code> — rename or move a file</li>
+          <li><code>cat notes.txt</code> — print a text file</li>
+          <li><code>clear</code> — clean the terminal screen</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="system" class="hidden panel">
+      <div class="card">
+        <h2>Computer info</h2>
+        <dl class="sys" id="sysinfo">
+          <dt>Loading…</dt>
+        </dl>
+      </div>
+    </section>
+
+    <footer>MintBuddy is a free local app. It does not send your notes to the internet.</footer>
+  </div>
+  <script>
+    const tips = [
+      "The Linux Mint menu search box can find apps faster than browsing folders.",
+      "Timeshift can take system snapshots before big changes.",
+      "Right-click the desktop to change wallpaper and desktop icons.",
+      "Nemo is Mint's file manager. Use Ctrl+H there to show hidden files.",
+      "Keep a school folder in Home, for example ~/School.",
+      "The terminal is powerful, but File Manager is perfect for everyday work."
+    ];
+
+    const hello = document.getElementById("hello");
+    const hour = new Date().getHours();
+    hello.textContent = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+
+    document.getElementById("dailyTips").innerHTML =
+      tips.slice(0, 4).map(t => `<li>${t}</li>`).join("");
+
+    document.querySelectorAll("nav button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
+        document.getElementById(btn.dataset.tab).classList.remove("hidden");
+      });
+    });
+
+    const notesBox = document.getElementById("notesBox");
+    notesBox.value = localStorage.getItem("mintbuddy-notes") || "";
+    document.getElementById("saveNotes").onclick = () => {
+      localStorage.setItem("mintbuddy-notes", notesBox.value);
+      document.getElementById("saveState").textContent = "Saved";
+    };
+    document.getElementById("clearNotes").onclick = () => {
+      notesBox.value = "";
+      localStorage.removeItem("mintbuddy-notes");
+      document.getElementById("saveState").textContent = "Cleared";
+    };
+
+    let total = 25 * 60, left = total, running = false, tick = null;
+    const clock = document.getElementById("clock");
+    function render() {
+      const m = String(Math.floor(left / 60)).padStart(2, "0");
+      const s = String(left % 60).padStart(2, "0");
+      clock.textContent = `${m}:${s}`;
+    }
+    function setMinutes(mins) {
+      total = mins * 60; left = total; running = false; clearInterval(tick);
+      document.getElementById("timerLabel").textContent =
+        mins === 5 ? "5-minute break" : mins + "-minute study block";
+      render();
+    }
+    document.getElementById("startBtn").onclick = () => {
+      if (running) return;
+      running = true;
+      tick = setInterval(() => {
+        if (left <= 0) {
+          running = false; clearInterval(tick);
+          clock.textContent = "Done";
+          return;
+        }
+        left -= 1; render();
+      }, 1000);
+    };
+    document.getElementById("pauseBtn").onclick = () => { running = false; clearInterval(tick); };
+    document.getElementById("resetBtn").onclick = () => setMinutes(Math.round(total / 60));
+    document.querySelectorAll("[data-mins]").forEach(b => {
+      b.onclick = () => setMinutes(Number(b.dataset.mins));
+    });
+    render();
+
+    fetch("/api/sysinfo").then(r => r.json()).then(info => {
+      const box = document.getElementById("sysinfo");
+      box.innerHTML = Object.entries(info).map(([k,v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+    }).catch(() => {
+      document.getElementById("sysinfo").innerHTML = "<dt>Info</dt><dd>Start MintBuddy with mintbuddy.py to see live PC details.</dd>";
+    });
+  </script>
+</body>
+</html>

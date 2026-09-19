@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=MintBuddy
+Comment=Friendly Linux Mint helper for students
+Exec=python3 /opt/mintbuddy/mintbuddy.py
+Icon=/opt/mintbuddy/icons/mintbuddy.svg
+Terminal=false
+Categories=Education;Utility;
+StartupNotify=true
+Keywords=mint;study;notes;linux;

@@ -3,7 +3,8 @@
 MintBuddy is a small local app for students using Linux Mint.
 It opens in your web browser and stays on your computer.
 
-**GitHub:** https://github.com/ahamdmurad02-dev/mintbuddy
+**GitHub:** https://github.com/ahamdmurad02-dev/mintbuddy  
+**Releases:** https://github.com/ahamdmurad02-dev/mintbuddy/releases
 
 ## What it does
 
@@ -15,6 +16,19 @@ It opens in your web browser and stays on your computer.
 
 No extra packages are required. It uses Python 3, which Linux Mint already has.
 
+## Fast install (.sh)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ahamdmurad02-dev/mintbuddy/main/install-mintbuddy.sh | bash
+```
+
+Or download `install-mintbuddy.sh` from Releases, then:
+
+```bash
+chmod +x install-mintbuddy.sh
+./install-mintbuddy.sh
+```
+
 ## Get the project from GitHub
 
 ```bash
@@ -22,27 +36,16 @@ sudo apt update
 sudo apt install -y git python3
 git clone https://github.com/ahamdmurad02-dev/mintbuddy.git
 cd mintbuddy
-chmod +x install.sh mintbuddy.py
+chmod +x install.sh mintbuddy.sh mintbuddy.py
 ./install.sh
 ```
 
 Then open the Mint Menu and search for **MintBuddy**.
 
-## Install without Git
-
-1. Copy the `mintbuddy` folder to your Home directory.
-2. Open Terminal and run:
+Start without the menu:
 
 ```bash
-cd ~/mintbuddy
-chmod +x install.sh mintbuddy.py
-./install.sh
-```
-
-You can also start it with:
-
-```bash
-mintbuddy
+./mintbuddy.sh
 ```
 
 ## Run without installing

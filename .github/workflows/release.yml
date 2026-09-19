@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x install-mintbuddy.sh mintbuddy.sh run.sh install.sh mintbuddy.py
+
+      - name: Pack source zip
+        run: |
+          zip -r mintbuddy-linux.zip \
+            mintbuddy.py mintbuddy.sh run.sh install.sh install-mintbuddy.sh \
+            mintbuddy.desktop README.md LICENSE \
+            web icons
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: MintBuddy ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            install-mintbuddy.sh
+            mintbuddy.sh
+            run.sh
+            install.sh
+            mintbuddy-linux.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
